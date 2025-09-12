@@ -23,7 +23,6 @@ export default function HomePage() {
 
   return (
     <div className="p-4 sm:p-6">
-     
       <div className="mb-6 flex justify-center px-2">
         <div className="relative w-full sm:w-3/4 md:w-1/2">
           <input
@@ -42,14 +41,12 @@ export default function HomePage() {
         </div>
       </div>
 
-     
       <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 p-2 sm:p-4 md:p-6">
         {data?.results.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </main>
 
-     
       {data && (
         <div className="mt-6 flex justify-center px-2">
           <PaginationControls
@@ -60,7 +57,6 @@ export default function HomePage() {
         </div>
       )}
 
-     
       {isFetching && (
         <p className="text-center text-xs sm:text-sm mt-2">Loading page...</p>
       )}

@@ -43,7 +43,6 @@ export default function PaginationControls({
 
   return (
     <div className="flex justify-center gap-2 mt-6 items-center flex-wrap">
-     
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
@@ -80,12 +79,11 @@ export default function PaginationControls({
               <span key={i} className="px-2 py-1">
                 {p}
               </span>
-            )
+            ),
           )}
         </div>
       )}
 
-      
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
