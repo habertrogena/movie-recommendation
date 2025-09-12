@@ -10,19 +10,33 @@ interface MovieCardProps {
 export default function MovieCard({ movie }: MovieCardProps) {
   return (
     <Link href={`/movie/${movie.id}`} passHref>
-      <Card className="shadow-md hover:scale-105 transition-transform cursor-pointer">
-        <CardContent>
+      <Card className="shadow-md hover:scale-105 transition-transform cursor-pointer rounded-xl overflow-hidden">
+        <CardContent className="p-2 sm:p-3">
+         
           {movie.poster_path && (
-            <Image
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              width={500}
-              height={750}
-              className="rounded-md"
-            />
+            <div className="relative w-full h-60 sm:h-72 md:h-80">
+              <Image
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                fill
+                sizes="(max-width: 640px) 100vw,
+                       (max-width: 1024px) 50vw,
+                       33vw"
+                className="object-cover rounded-md"
+                priority={false}
+              />
+            </div>
           )}
-          <h2 className="mt-2 text-lg font-semibold">{movie.title}</h2>
-          <p className="text-sm text-gray-600 line-clamp-3">{movie.overview}</p>
+
+         
+          <h2 className="mt-2 text-sm sm:text-base md:text-lg font-semibold truncate">
+            {movie.title}
+          </h2>
+
+         
+          <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3">
+            {movie.overview}
+          </p>
         </CardContent>
       </Card>
     </Link>
