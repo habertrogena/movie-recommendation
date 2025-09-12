@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "@/app/page";
 
 // Mock fetch for integration tests
-const mockFetch = (response: any, ok = true) => {
+const mockFetch = (response: unknown, ok = true) => {
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok,
