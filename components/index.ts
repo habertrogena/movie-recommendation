@@ -1,2 +1,2 @@
-export * from './ErrorMessage';
-export * from './LoadingMovies';
+export * from "./ErrorMessage";
+export * from "./LoadingMovies";

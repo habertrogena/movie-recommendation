@@ -8,7 +8,7 @@ const mockFetch = (response: any, ok = true) => {
     Promise.resolve({
       ok,
       json: () => Promise.resolve(response),
-    } as Response)
+    } as Response),
   ) as jest.Mock;
 };
 

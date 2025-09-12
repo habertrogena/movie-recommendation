@@ -17,7 +17,7 @@ jest.mock("@/lib/tmdb", () => ({
       ],
       total_pages: 1,
       total_results: 1,
-    })
+    }),
   ),
 }));
 
