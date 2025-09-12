@@ -1,0 +1,17 @@
+name: Deploy to Vercel Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Vercel Production Deploy
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_MOVIE_TOKEN }}" \
+            ${{ secrets.VERCEL_PROD_HOOK }}
