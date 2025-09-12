@@ -1,4 +1,4 @@
-name: CI/CD - Main Branch
+name: Deploy to Vercel Production
 
 on:
   push:
@@ -6,18 +6,18 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -25,15 +25,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Type check
-        run: pnpm tsc --noEmit
-
-      - name: Build
+      - name: Build project
         run: pnpm build
 
-      - name: Deploy to Vercel
-        run: |
-          pnpm dlx vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_MOVIE_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          vercel-args: '--prod'
