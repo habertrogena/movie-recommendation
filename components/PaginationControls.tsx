@@ -48,7 +48,7 @@ export default function PaginationControls({
         disabled={page === 1}
         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
       >
-        Prev
+        Previous
       </button>
 
       {isMobile ? (
