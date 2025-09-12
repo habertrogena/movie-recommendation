@@ -22,8 +22,11 @@ describe("useSearchMovies", () => {
   it("fetches movies when query is provided", async () => {
     const mockResponse: TMDBResponse = {
       page: 1,
-      results: [{
-          id: 1, title: "Inception", overview: "Dream movie",
+      results: [
+        {
+          id: 1,
+          title: "Inception",
+          overview: "Dream movie",
           original_title: "",
           poster_path: null,
           backdrop_path: null,
@@ -34,8 +37,9 @@ describe("useSearchMovies", () => {
           adult: false,
           video: false,
           genre_ids: [],
-          original_language: ""
-      }],
+          original_language: "",
+        },
+      ],
       total_pages: 1,
       total_results: 1,
     };
@@ -44,26 +48,24 @@ describe("useSearchMovies", () => {
 
     const { result } = renderHook(
       () => useSearchMovies({ query: "Inception", page: 1 }),
-      { wrapper: createWrapper() }
+      { wrapper: createWrapper() },
     );
 
     expect(result.current.isLoading).toBe(true);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    
     expect(result.current.data).toEqual(mockResponse);
   });
 
   it("does not run when query is empty", async () => {
     const { result } = renderHook(
       () => useSearchMovies({ query: "", page: 1 }),
-      { wrapper: createWrapper() }
+      { wrapper: createWrapper() },
     );
 
     // query should not run
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
-    
   });
 });

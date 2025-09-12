@@ -3,8 +3,11 @@ import type { TMDBResponse } from "@/types";
 
 const mockResponse: TMDBResponse = {
   page: 1,
-  results: [{
-      id: 1, title: "Inception", overview: "Dream movie",
+  results: [
+    {
+      id: 1,
+      title: "Inception",
+      overview: "Dream movie",
       original_title: "",
       poster_path: null,
       backdrop_path: null,
@@ -15,8 +18,9 @@ const mockResponse: TMDBResponse = {
       adult: false,
       video: false,
       genre_ids: [],
-      original_language: ""
-  }],
+      original_language: "",
+    },
+  ],
   total_pages: 1,
   total_results: 1,
 };
@@ -40,7 +44,7 @@ describe("fetchSearchMovies", () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining("/search/movie?"),
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 60 } },
     );
     expect(result).toEqual(mockResponse);
   });
@@ -55,7 +59,7 @@ describe("fetchSearchMovies", () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining("query=Spider%20Man&page=2"),
-      expect.any(Object)
+      expect.any(Object),
     );
   });
 
@@ -65,7 +69,7 @@ describe("fetchSearchMovies", () => {
     });
 
     await expect(fetchSearchMovies("FailCase", 1)).rejects.toThrow(
-      "Failed to search movies"
+      "Failed to search movies",
     );
   });
 });
