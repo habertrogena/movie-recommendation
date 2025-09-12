@@ -13,29 +13,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 1. Setup pnpm FIRST (this installs pnpm globally in PATH)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      # 2. Setup Node.js with pnpm cache (now pnpm exists, so cache works)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10 
-          run_install: false
-
+      # 3. Install dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # 4. Run lint
       - name: Run lint
         run: pnpm lint
 
+      # 5. Run type check
       - name: Run type check
         run: pnpm tsc --noEmit
 
-      - name: Run tests with coverage (enforce 60%)
+      # 6. Run tests with coverage (enforce 60%)
+      - name: Run tests with coverage
         run: pnpm test:coverage
 
+      # 7. Build project
       - name: Build project
         run: pnpm build
