@@ -9,7 +9,7 @@ import PaginationControls from "@/components/PaginationControls";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError, isFetching } = usePopularMovies({page});
+  const { data, isLoading, isError, isFetching } = usePopularMovies({ page });
 
   if (isLoading) return <LoadingMovies />;
   if (isError) return <ErrorMessage message="Failed to fetch movies." />;
@@ -21,7 +21,7 @@ export default function HomePage() {
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </main>
-      
+
       {data && (
         <PaginationControls
           page={data.page}
