@@ -19,7 +19,7 @@ const eslintConfig = [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended",
+    "plugin:prettier/recommended"
   ),
   {
     ignores: [
@@ -38,6 +38,7 @@ const eslintConfig = [
       ],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "react/react-in-jsx-scope": "off", // Next.js handles React import
+      "react/display-name": "off",
     },
   },
 ];
