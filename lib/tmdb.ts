@@ -26,3 +26,17 @@ export async function fetchMovieDetails(id: number): Promise<Movie> {
   if (!res.ok) throw new Error("Failed to fetch movie details");
   return res.json();
 }
+
+//search movie
+export async function fetchSearchMovies(
+  query: string,
+  page: number = 1,
+): Promise<TMDBResponse> {
+  const res = await fetch(
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`,
+    { next: { revalidate: 60 } },
+  );
+
+  if (!res.ok) throw new Error("Failed to search movies");
+  return res.json();
+}
