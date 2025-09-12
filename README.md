@@ -19,7 +19,7 @@ This project is part of the **Savannah Informatics Web Developer Assessment**. I
 
 ✨ Bonus:
 
-- 🎯 Recommendations (similar movies)
+- 🎯 Recommendations (similar movies from the api)
 - 🎨 Figma Wireframes & smooth animations
 
 ---
