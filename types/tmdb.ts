@@ -13,6 +13,11 @@ export interface Movie {
   video: boolean;
   genre_ids: number[];
   original_language: string;
+  runtime?: number;
+  tagline?: string;
+  genres?: Genre[];
+  status?: string;
+  homepage?: string | null;
 }
 
 export interface TMDBResponse {
@@ -20,4 +25,9 @@ export interface TMDBResponse {
   results: Movie[];
   total_pages: number;
   total_results: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }
