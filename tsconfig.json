@@ -20,7 +20,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/app/*": ["./app/*"]
     },
     "types": ["jest", "node"]
   },
@@ -33,7 +34,8 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "jest.setup.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "app/movies/[id]/**/*"
   ],
   "exclude": ["node_modules"]
 }
