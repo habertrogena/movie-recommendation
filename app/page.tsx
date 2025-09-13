@@ -2,11 +2,11 @@
 
 import { usePopularMovies } from "@/hooks/usePopularMovies";
 import { useSearchMovies } from "@/hooks/useSearchMovies";
-import LoadingMovies from "@/components/LoadingMovies";
 import ErrorMessage from "@/components/ErrorMessage";
 import MovieCard from "@/components/MovieCard";
 import PaginationControls from "@/components/PaginationControls";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
@@ -18,7 +18,13 @@ export default function HomePage() {
   const activeQuery = query ? searchQuery : popularQuery;
   const { data, isLoading, isError, isFetching } = activeQuery;
 
-  if (isLoading) return <LoadingMovies />;
+if (isLoading || isFetching) {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+    </div>
+  );
+}
   if (isError) return <ErrorMessage message="Failed to fetch movies." />;
 
   return (
