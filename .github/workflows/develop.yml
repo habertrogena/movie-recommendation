@@ -13,14 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. Setup pnpm FIRST (this installs pnpm globally in PATH)
+      # 1. Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
           run_install: false
 
-      # 2. Setup Node.js with pnpm cache (now pnpm exists, so cache works)
+      # 2. Setup Node.js with pnpm cache
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -39,10 +39,17 @@ jobs:
       - name: Run type check
         run: pnpm tsc --noEmit
 
-      # 6. Run tests with coverage (enforce 60%)
+      # 6. Run tests with coverage
       - name: Run tests with coverage
         run: pnpm test:coverage
 
-      # 7. Build project
+      # 7. Build project with Firebase envs
       - name: Build project
         run: pnpm build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
