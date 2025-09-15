@@ -2,8 +2,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import MovieDetailsPage from "@/app/movie/movieDetailsPage";
 import { useMovieDetails } from "@/hooks/useMovieDetails";
 import { useParams, useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 jest.mock("@/hooks/useMovieDetails");
+jest.mock("@/hooks/useAuth"); // ✅ mock auth
 jest.mock("next/navigation", () => ({
   useParams: jest.fn(),
   useRouter: jest.fn(),
@@ -11,11 +13,20 @@ jest.mock("next/navigation", () => ({
 
 describe("MovieDetailsPage", () => {
   const mockUseMovieDetails = useMovieDetails as jest.Mock;
+  const mockUseAuth = useAuth as jest.Mock;
   const mockUseParams = useParams as jest.Mock;
   const mockUseRouter = useRouter as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // ✅ always return a fake user to avoid undefined errors
+    mockUseAuth.mockReturnValue({
+      user: { uid: "test-user", email: "test@example.com" },
+      loading: false,
+      logout: jest.fn(),
+    });
+
     mockUseParams.mockReturnValue({ id: "1" });
     mockUseRouter.mockReturnValue({ back: jest.fn() });
   });
@@ -40,7 +51,7 @@ describe("MovieDetailsPage", () => {
 
     render(<MovieDetailsPage />);
     expect(
-      screen.getByText(/Failed to load movie details/i),
+      screen.getByText(/Failed to load movie details/i)
     ).toBeInTheDocument();
   });
 
@@ -62,10 +73,9 @@ describe("MovieDetailsPage", () => {
 
     expect(screen.getByText("Inception")).toBeInTheDocument();
     expect(screen.getByText(/Release Date:\s*2010-07-16/)).toBeInTheDocument();
-
     expect(screen.getByText(/Rating: 8.8/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/A thief who steals corporate secrets/i),
+      screen.getByText(/A thief who steals corporate secrets/i)
     ).toBeInTheDocument();
   });
 
@@ -87,7 +97,6 @@ describe("MovieDetailsPage", () => {
     });
 
     render(<MovieDetailsPage />);
-
     fireEvent.click(screen.getByText(/← Back to Movies/i));
     expect(backMock).toHaveBeenCalled();
   });
