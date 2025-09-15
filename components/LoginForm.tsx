@@ -15,8 +15,12 @@ export default function LoginForm() {
     try {
       await loginWithEmail(email, password);
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err:unknown) {
+       if (err instanceof Error) {
+         setError(err.message);
+       } else {
+         setError("An unexpected error occurred.");
+       }
     }
   };
 
@@ -24,8 +28,12 @@ export default function LoginForm() {
     try {
       await loginWithGoogle();
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

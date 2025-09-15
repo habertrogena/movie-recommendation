@@ -39,7 +39,7 @@ export default function MovieDetailsPage() {
     await handleAddToWatchlist();
   };
 
-  const onSignedUp = async (signedUser: any) => {
+  const onSignedUp = async (signedUser: unknown) => {
     if (signedUser && movie) {
       await handleAddToWatchlist();
     }

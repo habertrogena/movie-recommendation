@@ -34,8 +34,12 @@ export default function SignupModal({ isOpen, onClose, onSignedUp }: Props) {
       }
       onSignedUp(cred.user);
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Failed to create account");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to create account");
+      }
     } finally {
       setBusy(false);
     }
@@ -48,8 +52,12 @@ export default function SignupModal({ isOpen, onClose, onSignedUp }: Props) {
       const res = await signInWithPopup(auth, googleProvider);
       onSignedUp(res.user);
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Google sign-in failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Google sign-in failed");
+      }
     } finally {
       setBusy(false);
     }

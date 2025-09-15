@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { collection, doc, getDocs, deleteDoc } from "firebase/firestore";
 import { useAuth } from "@/hooks/useAuth";
 import LoadingMovies from "@/components/LoadingMovies";

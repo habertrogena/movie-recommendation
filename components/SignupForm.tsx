@@ -16,8 +16,12 @@ export default function SignupForm() {
       await signupWithEmail(email, password);
       alert("✅ Account created successfully! Movie added to watchlist.");
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -26,8 +30,12 @@ export default function SignupForm() {
       await loginWithGoogle();
       alert("✅ Account created successfully! Movie added to watchlist.");
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+       if (err instanceof Error) {
+         setError(err.message);
+       } else {
+         setError("An unexpected error occurred.");
+       }
     }
   };
 
