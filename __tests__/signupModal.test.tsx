@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
+  UserCredential,
 } from "firebase/auth";
 
 // 🔹 Mock Firebase auth SDK
@@ -41,7 +42,7 @@ describe("SignupModal", () => {
 
   it("renders form fields when open", () => {
     render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
+      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />
     );
 
     expect(screen.getByPlaceholderText(/Username/i)).toBeInTheDocument();
@@ -55,7 +56,7 @@ describe("SignupModal", () => {
     });
 
     render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
+      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/Username/i), {
@@ -72,13 +73,13 @@ describe("SignupModal", () => {
 
     await waitFor(() => {
       expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
-        expect.any(Object), // auth mock
+        expect.any(Object),
         "test@example.com",
-        "password123",
+        "password123"
       );
       expect(updateProfile).toHaveBeenCalledWith(
         { uid: "123", displayName: null },
-        { displayName: "testuser" },
+        { displayName: "testuser" }
       );
       expect(onSignedUp).toHaveBeenCalled();
       expect(onClose).toHaveBeenCalled();
@@ -87,11 +88,11 @@ describe("SignupModal", () => {
 
   it("handles email signup error", async () => {
     (createUserWithEmailAndPassword as jest.Mock).mockRejectedValue(
-      new Error("Signup failed"),
+      new Error("Signup failed")
     );
 
     render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
+      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/Email/i), {
@@ -102,6 +103,8 @@ describe("SignupModal", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: /Create account/i }));
+
+   
   });
 
   it("handles Google signup success", async () => {
@@ -110,11 +113,11 @@ describe("SignupModal", () => {
     });
 
     render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
+      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />
     );
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Continue with Google/i }),
+      screen.getByRole("button", { name: /Continue with Google/i })
     );
 
     await waitFor(() => {
@@ -131,24 +134,27 @@ describe("SignupModal", () => {
     (signInWithPopup as jest.Mock).mockRejectedValue(new Error("Google error"));
 
     render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
+      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />
     );
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Continue with Google/i }),
+      screen.getByRole("button", { name: /Continue with Google/i })
     );
 
     expect(await screen.findByText(/Google error/i)).toBeInTheDocument();
   });
 
   it("shows busy state while signing up", async () => {
-    let resolveSignup: Function;
+    let resolveSignup: (value: UserCredential) => void;
+
     (createUserWithEmailAndPassword as jest.Mock).mockReturnValue(
-      new Promise((res) => (resolveSignup = res)),
+      new Promise<UserCredential>((res) => {
+        resolveSignup = res;
+      })
     );
 
     render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
+      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/Email/i), {
@@ -160,7 +166,7 @@ describe("SignupModal", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Create account/i }));
 
-    // resolve signup
-    resolveSignup!({ user: { uid: "999" } });
+  
+  
   });
 });
