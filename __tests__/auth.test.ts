@@ -43,14 +43,14 @@ describe("auth wrapper", () => {
 
     expect(signInWithPopup).toHaveBeenCalledWith(
       expect.any(Object), // auth
-      expect.any(GoogleAuthProvider)
+      expect.any(GoogleAuthProvider),
     );
     expect(result).toEqual(mockUserCredential);
   });
 
   it("loginWithEmail calls signInWithEmailAndPassword", async () => {
     (signInWithEmailAndPassword as jest.Mock).mockResolvedValue(
-      mockUserCredential
+      mockUserCredential,
     );
 
     const result = await loginWithEmail("test@example.com", "password123");
@@ -58,14 +58,14 @@ describe("auth wrapper", () => {
     expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
       expect.any(Object),
       "test@example.com",
-      "password123"
+      "password123",
     );
     expect(result).toEqual(mockUserCredential);
   });
 
   it("signupWithEmail calls createUserWithEmailAndPassword", async () => {
     (createUserWithEmailAndPassword as jest.Mock).mockResolvedValue(
-      mockUserCredential
+      mockUserCredential,
     );
 
     const result = await signupWithEmail("new@example.com", "password456");
@@ -73,7 +73,7 @@ describe("auth wrapper", () => {
     expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
       expect.any(Object),
       "new@example.com",
-      "password456"
+      "password456",
     );
     expect(result).toEqual(mockUserCredential);
   });

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { addMovieToWatchlist } from "@/services/watchlistService";
-import { User } from "firebase/auth"; 
+import { User } from "firebase/auth";
 
 export function useWatchlist(
   user: User | null,
-  movie?: { id: number; title: string }
+  movie?: { id: number; title: string },
 ) {
   const [isAdding, setIsAdding] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -26,7 +26,6 @@ export function useWatchlist(
       showToast(`${movie.title} added to your watchlist ✅`);
       return true;
     } catch (err) {
-      
       showToast("Failed to add to watchlist. Try again.");
       return false;
     } finally {

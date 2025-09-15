@@ -51,7 +51,7 @@ describe("MovieDetailsPage", () => {
 
     render(<MovieDetailsPage />);
     expect(
-      screen.getByText(/Failed to load movie details/i)
+      screen.getByText(/Failed to load movie details/i),
     ).toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe("MovieDetailsPage", () => {
     expect(screen.getByText(/Release Date:\s*2010-07-16/)).toBeInTheDocument();
     expect(screen.getByText(/Rating: 8.8/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/A thief who steals corporate secrets/i)
+      screen.getByText(/A thief who steals corporate secrets/i),
     ).toBeInTheDocument();
   });
 

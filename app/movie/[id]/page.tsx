@@ -27,7 +27,7 @@ export default function MovieDetailsPage() {
 
   const { isAdding, toastMessage, handleAddToWatchlist } = useWatchlist(
     user,
-    movie
+    movie,
   );
 
   const handleClickAdd = async () => {

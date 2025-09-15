@@ -1,4 +1,3 @@
-
 import { auth } from "./firebase";
 import {
   GoogleAuthProvider,
@@ -16,14 +15,14 @@ export async function loginWithGoogle(): Promise<UserCredential> {
 
 export async function loginWithEmail(
   email: string,
-  password: string
+  password: string,
 ): Promise<UserCredential> {
   return await signInWithEmailAndPassword(auth, email, password);
 }
 
 export async function signupWithEmail(
   email: string,
-  password: string
+  password: string,
 ): Promise<UserCredential> {
   return await createUserWithEmailAndPassword(auth, email, password);
 }

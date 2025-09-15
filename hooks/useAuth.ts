@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { auth } from "../lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
@@ -20,5 +19,5 @@ export const useAuth = () => {
     setUser(null);
   };
 
-  return { user, loading,logout };
+  return { user, loading, logout };
 };

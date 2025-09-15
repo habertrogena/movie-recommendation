@@ -12,7 +12,7 @@ const firebaseConfig = {
 };
 
 //prevent multiple initialization in dev
-const app = !getApps().length? initializeApp(firebaseConfig):getApps()[0]
-export const auth = getAuth(app)
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
-export const db = getFirestore(app)
+export const db = getFirestore(app);

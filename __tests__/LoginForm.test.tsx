@@ -29,7 +29,7 @@ describe("LoginForm", () => {
     expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /continue with google/i })
+      screen.getByRole("button", { name: /continue with google/i }),
     ).toBeInTheDocument();
   });
 
@@ -50,7 +50,7 @@ describe("LoginForm", () => {
     await waitFor(() => {
       expect(loginWithEmail).toHaveBeenCalledWith(
         "test@example.com",
-        "password123"
+        "password123",
       );
       expect(pushMock).toHaveBeenCalledWith("/dashboard");
     });
@@ -58,7 +58,7 @@ describe("LoginForm", () => {
 
   it("shows error message if loginWithEmail fails", async () => {
     (loginWithEmail as jest.Mock).mockRejectedValueOnce(
-      new Error("Invalid credentials")
+      new Error("Invalid credentials"),
     );
 
     render(<LoginForm />);
@@ -82,7 +82,7 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
     fireEvent.click(
-      screen.getByRole("button", { name: /continue with google/i })
+      screen.getByRole("button", { name: /continue with google/i }),
     );
 
     await waitFor(() => {
@@ -93,12 +93,12 @@ describe("LoginForm", () => {
 
   it("shows error if loginWithGoogle fails", async () => {
     (loginWithGoogle as jest.Mock).mockRejectedValueOnce(
-      new Error("Google login failed")
+      new Error("Google login failed"),
     );
 
     render(<LoginForm />);
     fireEvent.click(
-      screen.getByRole("button", { name: /continue with google/i })
+      screen.getByRole("button", { name: /continue with google/i }),
     );
 
     await waitFor(() => {

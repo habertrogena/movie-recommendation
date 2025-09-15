@@ -45,7 +45,7 @@ describe("authService", () => {
     expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
       expect.any(Object), // auth
       "test@example.com",
-      "password123"
+      "password123",
     );
     expect(user).toEqual(mockUser);
   });
@@ -60,7 +60,7 @@ describe("authService", () => {
     expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
       expect.any(Object),
       "test@example.com",
-      "password123"
+      "password123",
     );
     expect(user).toEqual(mockUser);
   });
@@ -72,7 +72,7 @@ describe("authService", () => {
 
     expect(signInWithPopup).toHaveBeenCalledWith(
       expect.any(Object),
-      expect.any(Object)
+      expect.any(Object),
     );
     expect(user).toEqual(mockUser);
   });

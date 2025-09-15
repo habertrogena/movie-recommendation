@@ -1,6 +1,5 @@
 "use client";
 
-
 import LoginForm from "@/components/LoginForm";
 import SignupForm from "@/components/SignupForm";
 import Modal from "../ui/Modal";

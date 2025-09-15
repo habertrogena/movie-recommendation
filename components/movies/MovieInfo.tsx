@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Genre, Movie } from "@/types/tmdb"; 
+import { Genre, Movie } from "@/types/tmdb";
 
 interface MovieInfoProps {
   movie: Movie;

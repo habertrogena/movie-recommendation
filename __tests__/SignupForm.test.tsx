@@ -31,10 +31,10 @@ describe("SignupForm", () => {
     expect(screen.getByPlaceholderText(/Email/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Password/i)).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Sign Up/i })
+      screen.getByRole("button", { name: /Sign Up/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Continue with Google/i })
+      screen.getByRole("button", { name: /Continue with Google/i }),
     ).toBeInTheDocument();
   });
 
@@ -55,10 +55,10 @@ describe("SignupForm", () => {
     await waitFor(() => {
       expect(signupWithEmail).toHaveBeenCalledWith(
         "test@example.com",
-        "password123"
+        "password123",
       );
       expect(window.alert).toHaveBeenCalledWith(
-        "✅ Account created successfully! Movie added to watchlist."
+        "✅ Account created successfully! Movie added to watchlist.",
       );
       expect(mockRouterPush).toHaveBeenCalledWith("/dashboard");
     });
@@ -66,7 +66,7 @@ describe("SignupForm", () => {
 
   it("shows error message on email signup failure", async () => {
     (signupWithEmail as jest.Mock).mockRejectedValue(
-      new Error("Signup failed")
+      new Error("Signup failed"),
     );
 
     render(<SignupForm />);
@@ -89,13 +89,13 @@ describe("SignupForm", () => {
     render(<SignupForm />);
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Continue with Google/i })
+      screen.getByRole("button", { name: /Continue with Google/i }),
     );
 
     await waitFor(() => {
       expect(loginWithGoogle).toHaveBeenCalled();
       expect(window.alert).toHaveBeenCalledWith(
-        "✅ Account created successfully! Movie added to watchlist."
+        "✅ Account created successfully! Movie added to watchlist.",
       );
       expect(mockRouterPush).toHaveBeenCalledWith("/dashboard");
     });
@@ -103,13 +103,13 @@ describe("SignupForm", () => {
 
   it("shows error message on Google signup failure", async () => {
     (loginWithGoogle as jest.Mock).mockRejectedValue(
-      new Error("Google failed")
+      new Error("Google failed"),
     );
 
     render(<SignupForm />);
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Continue with Google/i })
+      screen.getByRole("button", { name: /Continue with Google/i }),
     );
 
     expect(await screen.findByText(/Google failed/i)).toBeInTheDocument();

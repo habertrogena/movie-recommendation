@@ -33,7 +33,7 @@ describe("watchlistService", () => {
       "users",
       mockUid,
       "watchlist",
-      String(mockMovie.id)
+      String(mockMovie.id),
     );
     expect(setDoc).toHaveBeenCalledWith(mockDocRef, {
       movieId: mockMovie.id,
@@ -47,7 +47,7 @@ describe("watchlistService", () => {
     (setDoc as jest.Mock).mockRejectedValue(new Error("Firestore error"));
 
     await expect(addMovieToWatchlist(mockUid, mockMovie)).rejects.toThrow(
-      "Firestore error"
+      "Firestore error",
     );
   });
 });
