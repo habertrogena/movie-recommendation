@@ -26,6 +26,7 @@ export function useWatchlist(
       showToast(`${movie.title} added to your watchlist ✅`);
       return true;
     } catch (err) {
+      console.error(err);
       showToast("Failed to add to watchlist. Try again.");
       return false;
     } finally {

@@ -22,8 +22,13 @@ jest.mock("@/lib/firebase", () => ({
 // 🔹 Mock Modal to simplify rendering
 jest.mock("@/components/Modal", () => ({
   __esModule: true,
-  default: ({ isOpen, children }: any) =>
-    isOpen ? <div>{children}</div> : null,
+  default: ({
+    isOpen,
+    children,
+  }: {
+    isOpen: boolean;
+    children: React.ReactNode;
+  }) => (isOpen ? <div>{children}</div> : null),
 }));
 
 describe("SignupModal", () => {

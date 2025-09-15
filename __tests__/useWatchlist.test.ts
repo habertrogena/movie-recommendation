@@ -1,13 +1,17 @@
 import { renderHook, act } from "@testing-library/react";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { addMovieToWatchlist } from "@/services/watchlistService";
+import { User } from "firebase/auth";
 
 jest.mock("@/services/watchlistService", () => ({
   addMovieToWatchlist: jest.fn(),
 }));
 
 describe("useWatchlist", () => {
-  const user = { uid: "123", email: "test@example.com" } as any;
+  const user = {
+    uid: "123",
+    email: "test@example.com",
+  } as Partial<User> as User;
   const movie = { id: 1, title: "Inception" };
 
   beforeEach(() => {
@@ -25,14 +29,12 @@ describe("useWatchlist", () => {
 
     const { result } = renderHook(() => useWatchlist(user, movie));
 
-    // trigger adding
     await act(async () => {
       await result.current.handleAddToWatchlist();
     });
 
     expect(result.current.toastMessage).toMatch(/added to your watchlist/);
 
-    // ⏰ advance timers INSIDE act()
     await act(() => {
       jest.advanceTimersByTime(2000);
     });

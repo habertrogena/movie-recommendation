@@ -22,7 +22,7 @@ export function useWatchlistCount() {
     });
 
     return () => unsubscribe();
-  }, [auth.currentUser]);
+  }, []);
 
   return count;
 }
