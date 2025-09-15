@@ -8,6 +8,7 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
     "^@/app/(.*)$": "<rootDir>/app/$1",
+    "^@/lib/firebase$": "<rootDir>/__mocks__/@/lib/firebase.ts",
   },
   transformIgnorePatterns: [
     "node_modules/(?!firebase/.*|@firebase/.*)", // 👈 important for Firebase esm
