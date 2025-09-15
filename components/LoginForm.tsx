@@ -15,12 +15,12 @@ export default function LoginForm() {
     try {
       await loginWithEmail(email, password);
       router.push("/dashboard");
-    } catch (err:unknown) {
-       if (err instanceof Error) {
-         setError(err.message);
-       } else {
-         setError("An unexpected error occurred.");
-       }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

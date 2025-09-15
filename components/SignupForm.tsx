@@ -31,11 +31,11 @@ export default function SignupForm() {
       alert("✅ Account created successfully! Movie added to watchlist.");
       router.push("/dashboard");
     } catch (err: unknown) {
-       if (err instanceof Error) {
-         setError(err.message);
-       } else {
-         setError("An unexpected error occurred.");
-       }
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
