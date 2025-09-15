@@ -9,6 +9,9 @@ const customJestConfig = {
     "^@/(.*)$": "<rootDir>/$1",
     "^@/app/(.*)$": "<rootDir>/app/$1",
   },
+  transformIgnorePatterns: [
+    "node_modules/(?!firebase/.*|@firebase/.*)", // 👈 important for Firebase esm
+  ],
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageThreshold: {

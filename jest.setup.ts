@@ -7,3 +7,18 @@ global.fetch = jest.fn(() =>
     json: () => Promise.resolve({}),
   }),
 ) as jest.Mock;
+
+
+jest.mock("@/lib/firebase", () => ({
+  auth: { currentUser: null },
+  googleProvider: {},
+  db: {},
+}));
+
+jest.mock("firebase/auth", () => ({
+  GoogleAuthProvider: jest.fn(),
+  signInWithPopup: jest.fn(),
+  signInWithEmailAndPassword: jest.fn(),
+  createUserWithEmailAndPassword: jest.fn(),
+  signOut: jest.fn(),
+}));
