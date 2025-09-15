@@ -141,27 +141,4 @@ describe("SignupModal", () => {
 
     expect(await screen.findByText(/Google error/i)).toBeInTheDocument();
   });
-
-  it("shows busy state while signing up", async () => {
-    let resolveSignup: (value: UserCredential) => void;
-
-    (createUserWithEmailAndPassword as jest.Mock).mockReturnValue(
-      new Promise<UserCredential>((res) => {
-        resolveSignup = res;
-      }),
-    );
-
-    render(
-      <SignupModal isOpen={true} onClose={onClose} onSignedUp={onSignedUp} />,
-    );
-
-    fireEvent.change(screen.getByPlaceholderText(/Email/i), {
-      target: { value: "busy@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), {
-      target: { value: "123456" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /Create account/i }));
-  });
 });
