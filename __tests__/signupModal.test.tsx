@@ -4,7 +4,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
-  UserCredential,
 } from "firebase/auth";
 
 // 🔹 Mock Firebase auth SDK
