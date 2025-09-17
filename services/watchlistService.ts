@@ -1,16 +1,27 @@
 import { db } from "@/lib/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { fetchMovieGenres } from "./tmdbService";
+
+export interface WatchlistMovie {
+  id: number;
+  title: string;
+  poster_path?: string;
+  genres?: string[];
+}
 
 export async function addMovieToWatchlist(
-  uid: string,
-  movie: { id: number; title: string },
-) {
-  //NOTE we use movie.id as document id to avoid duplicates
-  const docRef = doc(db, "users", uid, "watchlist", String(movie.id));
+  userId: string,
+  movie: WatchlistMovie,
+): Promise<void> {
+  const ref = doc(db, "users", userId, "watchlist", movie.id.toString());
 
-  await setDoc(docRef, {
-    movieId: movie.id,
-    title: movie.title,
-    addedAt: serverTimestamp(),
-  });
+  // Fetch genres from TMDB
+  const genres = await fetchMovieGenres(movie.id);
+
+  const movieData: WatchlistMovie = {
+    ...movie,
+    genres: genres.length > 0 ? genres : ["Uncategorized"],
+  };
+
+  await setDoc(ref, movieData, { merge: true });
 }
