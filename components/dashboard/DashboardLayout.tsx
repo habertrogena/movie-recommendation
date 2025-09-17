@@ -3,8 +3,6 @@
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 
-
-
 interface Props {
   children: React.ReactNode;
 }

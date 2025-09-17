@@ -4,7 +4,7 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 export async function fetchMovieGenres(movieId: number): Promise<string[]> {
   try {
     const res = await fetch(
-      `${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`
+      `${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`,
     );
 
     if (!res.ok) {

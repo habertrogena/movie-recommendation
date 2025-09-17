@@ -8,7 +8,7 @@ export interface CategoryCount {
 }
 
 export async function getUserCategories(
-  userId: string
+  userId: string,
 ): Promise<CategoryCount[]> {
   const ref = collection(db, "users", userId, "watchlist");
   const snapshot = await getDocs(ref);

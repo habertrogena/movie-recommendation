@@ -67,7 +67,7 @@ export default function DashboardPage() {
 
     try {
       await deleteDoc(
-        doc(db, "users", user.uid, "watchlist", movieId.toString())
+        doc(db, "users", user.uid, "watchlist", movieId.toString()),
       );
     } catch (err) {
       setError(`Could not remove movie. Try again.${err}`);
