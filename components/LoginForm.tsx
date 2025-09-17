@@ -59,7 +59,9 @@ export default function LoginForm() {
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded"
+          className="w-full bg-blue-400 text-white py-2 rounded 
+             hover:bg-blue-600 active:scale-95 
+             transition duration-200"
         >
           Login
         </button>
@@ -68,7 +70,9 @@ export default function LoginForm() {
       <div className="mt-4">
         <button
           onClick={handleGoogleLogin}
-          className="w-full bg-red-500 text-white py-2 rounded"
+          className="w-full bg-red-400 text-white py-2 rounded 
+               hover:bg-red-600 active:scale-95 
+               transition duration-200"
         >
           Continue with Google
         </button>

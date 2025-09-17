@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import WatchlistIcon from "@/components/WatchlistIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { useWatchlistCount } from "@/hooks/useWatchlistcount";
-
 import AuthModals from "@/components/layout/AuthModals";
 import ProfileMenu from "../auth/ProfileMenu";
 
@@ -19,6 +20,15 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
 
   const count = useWatchlistCount();
   const { user } = useAuth();
+  const router = useRouter();
+
+  const handleWatchlistClick = () => {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      setIsLoginOpen(true);
+    }
+  };
 
   return (
     <div className="sticky top-0 z-20 bg-slate-200 pb-4 mb-6 flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-center border-b border-gray-300">
@@ -38,26 +48,44 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
 
       {/* Right side */}
       <div className="flex items-center gap-3 sm:gap-4">
-        <WatchlistIcon
-          count={count}
-          onClick={() => (user ? null : setIsLoginOpen(true))}
-        />
+        {/* Animated Watchlist Icon */}
+        <motion.div
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          onClick={handleWatchlistClick}
+          className="cursor-pointer"
+        >
+          <WatchlistIcon count={count} />
+        </motion.div>
+
         {user ? (
           <ProfileMenu user={user} />
         ) : (
           <>
-            <button
+            {/* Login Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsLoginOpen(true)}
-              className="px-4 py-2 border rounded-lg text-sm sm:text-base font-medium hover:bg-gray-100 transition"
+              className="px-4 py-2 border rounded-lg text-sm sm:text-base font-medium 
+                         bg-white text-gray-700 hover:bg-green-100 hover:text-green-700 
+                         transition-colors duration-200"
             >
               Login
-            </button>
-            <button
+            </motion.button>
+
+            {/* Sign Up Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsSignupOpen(true)}
-              className="px-4 py-2 border rounded-lg text-sm sm:text-base font-medium bg-blue-600 text-white hover:bg-blue-700 transition"
+              className="px-4 py-2 border rounded-lg text-sm sm:text-base font-medium 
+                         bg-blue-600 text-white hover:bg-sky-600 hover:shadow-md 
+                         transition-colors duration-200"
             >
               Sign Up
-            </button>
+            </motion.button>
           </>
         )}
       </div>

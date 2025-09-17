@@ -79,7 +79,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">🎬 My Watchlist</h1>
+      <h3 className="text-3xl font-bold mb-6">🎬 My Watchlist</h3>
 
       {watchlist.length === 0 ? (
         <WatchlistEmpty />
