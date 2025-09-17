@@ -68,7 +68,7 @@ export default function MovieDetailsPage() {
       <Modal isOpen={showPromptModal} onClose={() => setShowPromptModal(false)}>
         <h3 className="text-lg font-semibold mb-2">Create an account</h3>
         <p className="text-sm text-gray-700 mb-4">
-          For you to add movie to watchlist you need to create an account first.
+          For you to add movie to watchlist you need to login or create an account first.
         </p>
         <div className="flex gap-2">
           <button

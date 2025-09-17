@@ -8,6 +8,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import TopBar from "@/components/layout/TopBar";
 import MoviesGrid from "@/components/movies/MoviesGrid";
 import MoviesPagination from "@/components/movies/MoviesPagination";
+import NoResultsFound from "@/components/NoResultsFound";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
@@ -32,7 +33,10 @@ export default function HomePage() {
             setPage(1);
           }}
         />
-
+        {query && data?.results?.length === 0 && (
+          <NoResultsFound query={query} />
+        )}
+        
         {data && <MoviesGrid movies={data.results} />}
 
         {data && (
@@ -43,11 +47,7 @@ export default function HomePage() {
           />
         )}
 
-        {isFetching && (
-          <p className="text-center text-xs sm:text-sm mt-2 text-gray-500">
-            Loading page...
-          </p>
-        )}
+        {isFetching && <LoadingMovies />}
       </div>
     </div>
   );
