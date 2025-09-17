@@ -61,7 +61,9 @@ export default function SignupForm() {
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded"
+          className="w-full bg-green-400 text-white py-2 rounded 
+             hover:bg-green-600 active:scale-95 
+             transition duration-200"
         >
           Sign Up
         </button>
@@ -70,7 +72,9 @@ export default function SignupForm() {
       <div className="mt-4">
         <button
           onClick={handleGoogleSignup}
-          className="w-full bg-red-500 text-white py-2 rounded"
+          className="w-full bg-red-500 text-white py-2 rounded 
+               hover:bg-red-600 active:scale-95 
+               transition duration-200"
         >
           Continue with Google
         </button>
