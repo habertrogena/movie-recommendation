@@ -5,35 +5,42 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserCategories, CategoryCount } from "@/services/categoryService";
 
-export default function Sidebar() {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
   const { user, logout } = useAuth();
   const router = useRouter();
-
   const [categories, setCategories] = useState<CategoryCount[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-
     const fetchCategories = async () => {
       try {
         setLoading(true);
         const cats = await getUserCategories(user.uid);
         setCategories(cats);
-      } catch (err) {
-        console.error("Failed to fetch categories:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, [user]);
 
   return (
-    <aside className="w-64 bg-white shadow-lg p-6 flex flex-col">
-      <div className="mb-6">
+    <aside className="w-64 h-full bg-white shadow-lg p-6 flex flex-col">
+      <div className="mb-6 flex justify-between items-center">
         <h2 className="text-xl font-bold">Dashboard</h2>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="md:hidden text-gray-600 hover:text-black"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {user && (
