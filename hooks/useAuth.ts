@@ -15,9 +15,16 @@ export const useAuth = () => {
   }, []);
 
   const logout = async () => {
-    await signOut(auth);
-    setUser(null);
+    try {
+      await signOut(auth);
+      setUser(null);
+      return true;
+    } catch (err) {
+      console.error("Logout failed:", err);
+      return false;
+    }
   };
+
 
   return { user, loading, logout };
 };

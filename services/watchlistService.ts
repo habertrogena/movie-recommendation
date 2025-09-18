@@ -11,17 +11,22 @@ export interface WatchlistMovie {
 
 export async function addMovieToWatchlist(
   userId: string,
-  movie: WatchlistMovie,
-): Promise<void> {
-  const ref = doc(db, "users", userId, "watchlist", movie.id.toString());
+  movie: WatchlistMovie
+): Promise<boolean> {
+  try {
+    const ref = doc(db, "users", userId, "watchlist", movie.id.toString());
 
-  // Fetch genres from TMDB
-  const genres = await fetchMovieGenres(movie.id);
+    const genres = await fetchMovieGenres(movie.id);
+    const movieData: WatchlistMovie = {
+      ...movie,
+      genres: genres.length > 0 ? genres : ["Uncategorized"],
+    };
 
-  const movieData: WatchlistMovie = {
-    ...movie,
-    genres: genres.length > 0 ? genres : ["Uncategorized"],
-  };
-
-  await setDoc(ref, movieData, { merge: true });
+    await setDoc(ref, movieData, { merge: true });
+    return true;
+  } catch (err) {
+    console.error("Failed to add movie to watchlist:", err);
+    return false;
+  }
 }
+

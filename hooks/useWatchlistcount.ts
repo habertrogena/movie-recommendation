@@ -1,4 +1,4 @@
-// hooks/useWatchlistCount.ts
+
 "use client";
 
 import { useEffect, useState } from "react";
