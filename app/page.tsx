@@ -36,7 +36,7 @@ export default function HomePage() {
         {query && data?.results?.length === 0 && (
           <NoResultsFound query={query} />
         )}
-        
+
         {data && <MoviesGrid movies={data.results} />}
 
         {data && (

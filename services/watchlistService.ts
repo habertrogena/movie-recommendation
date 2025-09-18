@@ -11,7 +11,7 @@ export interface WatchlistMovie {
 
 export async function addMovieToWatchlist(
   userId: string,
-  movie: WatchlistMovie
+  movie: WatchlistMovie,
 ): Promise<boolean> {
   try {
     const ref = doc(db, "users", userId, "watchlist", movie.id.toString());
@@ -29,4 +29,3 @@ export async function addMovieToWatchlist(
     return false;
   }
 }
-

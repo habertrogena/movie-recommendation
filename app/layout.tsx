@@ -17,9 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <ErrorBoundary>
-            {children}
-          </ErrorBoundary>
+          <ErrorBoundary>{children}</ErrorBoundary>
         </Providers>
       </body>
     </html>

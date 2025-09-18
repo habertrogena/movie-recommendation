@@ -12,7 +12,7 @@ interface WatchlistDoc {
 }
 
 export async function getUserCategories(
-  userId: string
+  userId: string,
 ): Promise<CategoryCount[]> {
   try {
     const ref = collection(db, "users", userId, "watchlist");
