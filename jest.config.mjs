@@ -8,7 +8,7 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
     "^@/app/(.*)$": "<rootDir>/app/$1",
-    "^@/lib/firebase$": "<rootDir>/__mocks__/@/lib/firebase.ts",
+    "^@/lib/firebase$": "<rootDir>/__mocks__/firebase.ts",
   },
   transformIgnorePatterns: [
     "node_modules/(?!firebase/.*|@firebase/.*)", // 👈 important for Firebase esm
@@ -17,10 +17,10 @@ const customJestConfig = {
   coverageDirectory: "coverage",
   coverageThreshold: {
     global: {
-      statements: 30,
-      branches: 30,
-      functions: 30,
-      lines: 30,
+      statements: 90,
+      branches: 80,
+      functions: 90,
+      lines: 90,
     },
   },
 };

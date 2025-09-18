@@ -25,6 +25,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
         {onMenuClick && (
           <button
             onClick={onMenuClick}
+            aria-label="open menu"
             className="md:hidden p-2 rounded hover:bg-slate-100"
           >
             <Menu className="w-6 h-6" />

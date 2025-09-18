@@ -58,7 +58,6 @@ export default function DashboardPage() {
     fetchWatchlist();
   }, [user]);
 
-  // Remove movie from watchlist
   const handleRemove = async (movieId: number) => {
     if (!user) return;
 
