@@ -8,7 +8,7 @@ export interface CategoryCount {
 }
 
 interface WatchlistDoc {
-  genres?: string[];
+  genres?: { id: number; name: string }[];
 }
 
 export async function getUserCategories(
@@ -22,10 +22,11 @@ export async function getUserCategories(
 
     snapshot.forEach((doc) => {
       const data = doc.data() as WatchlistDoc;
-      const genres: string[] = data.genres || ["Uncategorized"];
+      const genres = data.genres || [{ id: 0, name: "Uncategorized" }];
 
       genres.forEach((g) => {
-        categoryMap[g] = (categoryMap[g] || 0) + 1;
+        const name = g.name;
+        categoryMap[name] = (categoryMap[name] || 0) + 1;
       });
     });
 
