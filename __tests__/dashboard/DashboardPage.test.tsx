@@ -1,59 +1,56 @@
-// __tests__/dashboard/DashboardPage.test.tsx
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-
+import DashboardPage from "@/app/dashboard/page";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import DashboardPage from "@/app/dashboard/page";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { WatchlistMovie } from "@/services/watchlistService";
 
-// Mock hooks and Firebase
-jest.mock("@/hooks/useAuth");
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(),
-}));
-jest.mock("firebase/firestore", () => ({
-  collection: jest.fn(),
-  getDocs: jest.fn(),
-  doc: jest.fn(),
-  deleteDoc: jest.fn(),
-}));
-
-// Mock child components to simplify test render
+// Mock components
 jest.mock("@/components/LoadingMovies", () => () => <div>LoadingMovies</div>);
 jest.mock(
   "@/components/ErrorMessage",
   () =>
-    ({ message }: { message: string }) => <div>{message}</div>,
+    ({ message }: { message: string }) => <div>{message}</div>
 );
 jest.mock(
   "@/components/dashboard/WatchlistGrid",
   () =>
-    ({ movies, onRemove }: any) => (
+    ({
+      movies,
+      onRemove,
+    }: {
+      movies: WatchlistMovie[];
+      onRemove: (id: number) => void;
+    }) => (
       <div>
-        {movies.map((m: any) => (
+        {movies.map((m) => (
           <div key={m.id}>
-            {m.title}
-            <button onClick={() => onRemove(m.id)}>Remove</button>
+            {m.title} <button onClick={() => onRemove(m.id)}>Remove</button>
           </div>
         ))}
       </div>
-    ),
+    )
 );
 jest.mock("@/components/dashboard/WatchlistEmpty", () => () => (
-  <div>WatchlistEmpty</div>
+  <div>No movies</div>
 ));
 jest.mock("@/components/dashboard/RecommendedMovies", () => () => (
   <div>RecommendedMovies</div>
 ));
 
-// QueryClient wrapper
-const createWrapper = () => {
-  const queryClient = new QueryClient();
-  return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-};
+// Mock hooks
+jest.mock("@/hooks/useAuth");
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
+
+// Mock Firestore functions
+jest.mock("firebase/firestore", () => ({
+  collection: jest.fn(),
+  getDocs: jest.fn(),
+  deleteDoc: jest.fn(),
+  doc: jest.fn(),
+}));
 
 describe("DashboardPage", () => {
   const pushMock = jest.fn();
@@ -63,34 +60,48 @@ describe("DashboardPage", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
   });
 
-  it("shows loading while auth is loading", () => {
-    (useAuth as jest.Mock).mockReturnValue({ user: null, loading: true });
-    render(<DashboardPage />, { wrapper: createWrapper() });
-    expect(screen.getByText("LoadingMovies")).toBeInTheDocument();
-  });
-
-  it("redirects to homepage if no user", async () => {
+  it("redirects to home if user is not logged in", async () => {
     (useAuth as jest.Mock).mockReturnValue({ user: null, loading: false });
-    render(<DashboardPage />, { wrapper: createWrapper() });
+
+    render(<DashboardPage />);
+
     await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/"));
   });
 
-  it("renders empty watchlist when no movies", async () => {
-    (useAuth as jest.Mock).mockReturnValue({
-      user: { uid: "123" },
-      loading: false,
-    });
-    (getDocs as jest.Mock).mockResolvedValue({ docs: [] });
+  it("renders loading state initially", () => {
+    (useAuth as jest.Mock).mockReturnValue({ user: null, loading: true });
 
-    render(<DashboardPage />, { wrapper: createWrapper() });
+    render(<DashboardPage />);
+    expect(screen.getByText("LoadingMovies")).toBeInTheDocument();
+  });
 
+  it("renders error message if fetching watchlist fails", async () => {
+    const mockUser = { uid: "mock-uid" };
+    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+    (getDocs as jest.Mock).mockRejectedValueOnce(new Error("fetch error"));
+
+    render(<DashboardPage />);
     await waitFor(() =>
-      expect(screen.getByText("WatchlistEmpty")).toBeInTheDocument(),
+      expect(screen.getByText(/failed to load watchlist/i)).toBeInTheDocument()
     );
   });
 
-  it("renders watchlist movies and allows removal", async () => {
-    const mockMovies = [
+  it("renders WatchlistEmpty when there are no movies", async () => {
+    const mockUser = { uid: "mock-uid" };
+    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+    (getDocs as jest.Mock).mockResolvedValue({ docs: [] });
+
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByText("No movies")).toBeInTheDocument();
+    });
+  });
+
+  it("renders WatchlistGrid with movies and allows removal", async () => {
+    const mockUser = { uid: "mock-uid" };
+    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+
+    const movies: WatchlistMovie[] = [
       {
         id: 1,
         title: "Movie 1",
@@ -100,40 +111,50 @@ describe("DashboardPage", () => {
         vote_average: 0,
         genres: [],
       },
+      {
+        id: 2,
+        title: "Movie 2",
+        poster_path: null,
+        backdrop_path: null,
+        release_date: "",
+        vote_average: 0,
+        genres: [],
+      },
     ];
 
-    (useAuth as jest.Mock).mockReturnValue({
-      user: { uid: "123" },
-      loading: false,
-    });
+    (collection as jest.Mock).mockReturnValue("ref");
     (getDocs as jest.Mock).mockResolvedValue({
-      docs: mockMovies.map((m) => ({ id: m.id.toString(), data: () => m })),
+      docs: movies.map((m) => ({ id: m.id.toString(), data: () => m })),
     });
-    (deleteDoc as jest.Mock).mockResolvedValue(true);
-
-    render(<DashboardPage />, { wrapper: createWrapper() });
-
-    await waitFor(() =>
-      expect(screen.getByText("Movie 1")).toBeInTheDocument(),
+    (doc as jest.Mock).mockImplementation(
+      (db, path1, path2, path3, path4) => `${path1}-${path2}-${path3}-${path4}`
     );
+    (deleteDoc as jest.Mock).mockResolvedValue(null);
 
-    fireEvent.click(screen.getByText("Remove"));
-    await waitFor(() => expect(deleteDoc).toHaveBeenCalled());
+    render(<DashboardPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Movie 1")).toBeInTheDocument();
+      expect(screen.getByText("Movie 2")).toBeInTheDocument();
+    });
+
+    const removeButtons = screen.getAllByText("Remove", { selector: "button" });
+    fireEvent.click(removeButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.queryByText("Movie 1")).not.toBeInTheDocument();
+      expect(screen.getByText("Movie 2")).toBeInTheDocument();
+    });
   });
 
-  it("renders error message when fetch fails", async () => {
-    (useAuth as jest.Mock).mockReturnValue({
-      user: { uid: "123" },
-      loading: false,
-    });
-    (getDocs as jest.Mock).mockRejectedValue(new Error("Firestore error"));
+  it("renders RecommendedMovies component", async () => {
+    const mockUser = { uid: "mock-uid" };
+    (useAuth as jest.Mock).mockReturnValue({ user: mockUser, loading: false });
+    (getDocs as jest.Mock).mockResolvedValue({ docs: [] });
 
-    render(<DashboardPage />, { wrapper: createWrapper() });
-
+    render(<DashboardPage />);
     await waitFor(() =>
-      expect(
-        screen.getByText(/Failed to load watchlist. Please try again./),
-      ).toBeInTheDocument(),
+      expect(screen.getByText("RecommendedMovies")).toBeInTheDocument()
     );
   });
 });
