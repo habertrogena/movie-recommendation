@@ -1,5 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Sidebar from "@/components/dashboard/Sidebar";
+import { getUserCategories } from "@/services/categoryService";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -21,17 +23,33 @@ jest.mock("@/hooks/useAuth", () => ({
 }));
 
 jest.mock("@/services/categoryService", () => ({
-  getUserCategories: jest
-    .fn()
-    .mockResolvedValue([{ id: "1", name: "Mock Cat", count: 3 }]),
+  getUserCategories: jest.fn(),
 }));
 
-describe("Sidebar", () => {
-  it("renders and loads categories without act warnings", async () => {
-    render(<Sidebar />);
+// Utility function to render with QueryClientProvider
+const renderWithQueryClient = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+};
 
+describe("Sidebar", () => {
+  beforeEach(() => {
+    (getUserCategories as jest.Mock).mockReset();
+  });
+
+  it("renders and loads categories without act warnings", async () => {
+    (getUserCategories as jest.Mock).mockResolvedValue([
+      { id: "1", name: "Mock Cat", count: 3 },
+    ]);
+
+    renderWithQueryClient(<Sidebar />);
+
+    // Loading state
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
 
+    // After async load
     await waitFor(() => {
       expect(screen.getByText("Mock Cat")).toBeInTheDocument();
       expect(screen.getByText("3")).toBeInTheDocument();
@@ -39,9 +57,12 @@ describe("Sidebar", () => {
   });
 
   it("shows 'No categories yet' if API returns empty", async () => {
-    const { getUserCategories } = require("@/services/categoryService");
-    getUserCategories.mockResolvedValueOnce([]);
+    (getUserCategories as jest.Mock).mockResolvedValue([]);
 
-    render(<Sidebar />);
+    renderWithQueryClient(<Sidebar />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/No categories yet/i)).toBeInTheDocument();
+    });
   });
 });

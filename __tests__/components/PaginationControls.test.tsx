@@ -1,13 +1,11 @@
 import PaginationControls from "@/components/PaginationControls";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { useMediaQuery as mockedUseMediaQuery } from "react-responsive";
 
 // Mock react-responsive
 jest.mock("react-responsive", () => ({
   useMediaQuery: jest.fn(),
 }));
-
-const mockedUseMediaQuery = require("react-responsive")
-  .useMediaQuery as jest.Mock;
 
 describe("PaginationControls", () => {
   const onPageChange = jest.fn();
@@ -17,7 +15,7 @@ describe("PaginationControls", () => {
   });
 
   it("disables 'Previous' button on first page", () => {
-    mockedUseMediaQuery.mockReturnValue(false); // desktop
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(false); // desktop
     render(
       <PaginationControls
         page={1}
@@ -29,7 +27,7 @@ describe("PaginationControls", () => {
   });
 
   it("disables 'Next' button on last page", () => {
-    mockedUseMediaQuery.mockReturnValue(false); // desktop
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(false); // desktop
     render(
       <PaginationControls
         page={5}
@@ -41,7 +39,7 @@ describe("PaginationControls", () => {
   });
 
   it("calls onPageChange when clicking 'Previous' or 'Next'", () => {
-    mockedUseMediaQuery.mockReturnValue(false);
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(false);
     render(
       <PaginationControls
         page={3}
@@ -56,7 +54,7 @@ describe("PaginationControls", () => {
   });
 
   it("renders mobile view with page text", () => {
-    mockedUseMediaQuery.mockReturnValue(true); // mobile
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(true); // mobile
     render(
       <PaginationControls
         page={2}
@@ -68,7 +66,7 @@ describe("PaginationControls", () => {
   });
 
   it("renders all pages when totalPages <= 7 (desktop)", () => {
-    mockedUseMediaQuery.mockReturnValue(false);
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(false);
     render(
       <PaginationControls
         page={3}
@@ -82,7 +80,7 @@ describe("PaginationControls", () => {
   });
 
   it("renders ellipsis when totalPages > 7", () => {
-    mockedUseMediaQuery.mockReturnValue(false);
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(false);
     render(
       <PaginationControls
         page={5}
@@ -94,7 +92,7 @@ describe("PaginationControls", () => {
   });
 
   it("calls onPageChange when clicking a middle page number", () => {
-    mockedUseMediaQuery.mockReturnValue(false);
+    (mockedUseMediaQuery as jest.Mock).mockReturnValue(false);
     render(
       <PaginationControls
         page={5}

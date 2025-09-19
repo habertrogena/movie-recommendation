@@ -33,8 +33,8 @@ describe("TMDB API", () => {
   it("fetchPopularMovies returns movies on success", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: jest.fn().mockResolvedValue(mockPopularResponse),
-    } as any);
+      json: async () => mockPopularResponse,
+    } as Partial<Response> as Response);
 
     const data = await fetchPopularMovies(1);
     expect(data).toEqual(mockPopularResponse);
@@ -47,7 +47,7 @@ describe("TMDB API", () => {
   it("fetchPopularMovies throws error on failure", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: false,
-    } as any);
+    } as Partial<Response> as Response);
 
     await expect(fetchPopularMovies(1)).rejects.toThrow(
       "Failed to fetch movies",
@@ -57,8 +57,8 @@ describe("TMDB API", () => {
   it("fetchMovieDetails returns movie details on success", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: jest.fn().mockResolvedValue(mockMovieDetails),
-    } as any);
+      json: async () => mockMovieDetails,
+    } as Partial<Response> as Response);
 
     const data = await fetchMovieDetails(1);
     expect(data).toEqual(mockMovieDetails);
@@ -68,7 +68,7 @@ describe("TMDB API", () => {
   it("fetchMovieDetails throws error on failure", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: false,
-    } as any);
+    } as Partial<Response> as Response);
 
     await expect(fetchMovieDetails(1)).rejects.toThrow(
       "Failed to fetch movie details",
@@ -78,8 +78,8 @@ describe("TMDB API", () => {
   it("fetchSearchMovies returns search results on success", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: jest.fn().mockResolvedValue(mockSearchResponse),
-    } as any);
+      json: async () => mockSearchResponse,
+    } as Partial<Response> as Response);
 
     const data = await fetchSearchMovies("test", 1);
     expect(data).toEqual(mockSearchResponse);
@@ -92,7 +92,7 @@ describe("TMDB API", () => {
   it("fetchSearchMovies throws error on failure", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: false,
-    } as any);
+    } as Partial<Response> as Response);
 
     await expect(fetchSearchMovies("test", 1)).rejects.toThrow(
       "Failed to search movies",

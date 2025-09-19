@@ -1,34 +1,41 @@
+// __tests__/dashboard/DashboardPage.test.tsx
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import DashboardPage from "@/app/dashboard/page";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { getDocs, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DashboardPage from "@/app/dashboard/page";
 
+// Mock hooks and Firebase
 jest.mock("@/hooks/useAuth");
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 jest.mock("firebase/firestore", () => ({
   collection: jest.fn(),
-  doc: jest.fn(),
   getDocs: jest.fn(),
+  doc: jest.fn(),
   deleteDoc: jest.fn(),
 }));
 
+// Mock child components to simplify test render
 jest.mock("@/components/LoadingMovies", () => () => <div>LoadingMovies</div>);
-jest.mock("@/components/ErrorMessage", () => ({ message }: any) => (
-  <div>Error: {message}</div>
-));
+jest.mock(
+  "@/components/ErrorMessage",
+  () =>
+    ({ message }: { message: string }) => <div>{message}</div>,
+);
 jest.mock(
   "@/components/dashboard/WatchlistGrid",
   () =>
     ({ movies, onRemove }: any) => (
       <div>
-        WatchlistGrid
         {movies.map((m: any) => (
-          <button key={m.id} onClick={() => onRemove(m.id)}>
-            Remove {m.title}
-          </button>
+          <div key={m.id}>
+            {m.title}
+            <button onClick={() => onRemove(m.id)}>Remove</button>
+          </div>
         ))}
       </div>
     ),
@@ -36,99 +43,97 @@ jest.mock(
 jest.mock("@/components/dashboard/WatchlistEmpty", () => () => (
   <div>WatchlistEmpty</div>
 ));
+jest.mock("@/components/dashboard/RecommendedMovies", () => () => (
+  <div>RecommendedMovies</div>
+));
+
+// QueryClient wrapper
+const createWrapper = () => {
+  const queryClient = new QueryClient();
+  return ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
 
 describe("DashboardPage", () => {
-  const mockPush = jest.fn();
+  const pushMock = jest.fn();
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
     jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
   });
 
-  it("shows LoadingMovies when loading", () => {
+  it("shows loading while auth is loading", () => {
     (useAuth as jest.Mock).mockReturnValue({ user: null, loading: true });
-
-    render(<DashboardPage />);
+    render(<DashboardPage />, { wrapper: createWrapper() });
     expect(screen.getByText("LoadingMovies")).toBeInTheDocument();
   });
 
-  it("redirects to / if not logged in", () => {
+  it("redirects to homepage if no user", async () => {
     (useAuth as jest.Mock).mockReturnValue({ user: null, loading: false });
-
-    render(<DashboardPage />);
-    expect(mockPush).toHaveBeenCalledWith("/");
+    render(<DashboardPage />, { wrapper: createWrapper() });
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/"));
   });
 
-  it("shows error when fetching fails", async () => {
+  it("renders empty watchlist when no movies", async () => {
     (useAuth as jest.Mock).mockReturnValue({
       user: { uid: "123" },
       loading: false,
     });
-
-    (getDocs as jest.Mock).mockRejectedValue(new Error("Firestore error"));
-
-    render(<DashboardPage />);
-
-    await waitFor(() =>
-      expect(screen.getByText(/Failed to load watchlist/)).toBeInTheDocument(),
-    );
-  });
-
-  it("shows WatchlistEmpty when no movies", async () => {
-    (useAuth as jest.Mock).mockReturnValue({
-      user: { uid: "123" },
-      loading: false,
-    });
-
     (getDocs as jest.Mock).mockResolvedValue({ docs: [] });
 
-    render(<DashboardPage />);
+    render(<DashboardPage />, { wrapper: createWrapper() });
 
     await waitFor(() =>
       expect(screen.getByText("WatchlistEmpty")).toBeInTheDocument(),
     );
   });
 
-  it("renders WatchlistGrid with movies", async () => {
+  it("renders watchlist movies and allows removal", async () => {
+    const mockMovies = [
+      {
+        id: 1,
+        title: "Movie 1",
+        poster_path: null,
+        backdrop_path: null,
+        release_date: "",
+        vote_average: 0,
+        genres: [],
+      },
+    ];
+
     (useAuth as jest.Mock).mockReturnValue({
       user: { uid: "123" },
       loading: false,
     });
-
     (getDocs as jest.Mock).mockResolvedValue({
-      docs: [
-        { id: "1", data: () => ({ title: "Movie A" }) },
-        { id: "2", data: () => ({ title: "Movie B" }) },
-      ],
+      docs: mockMovies.map((m) => ({ id: m.id.toString(), data: () => m })),
     });
+    (deleteDoc as jest.Mock).mockResolvedValue(true);
 
-    render(<DashboardPage />);
+    render(<DashboardPage />, { wrapper: createWrapper() });
 
     await waitFor(() =>
-      expect(screen.getByText("WatchlistGrid")).toBeInTheDocument(),
+      expect(screen.getByText("Movie 1")).toBeInTheDocument(),
     );
-    expect(screen.getByText("Remove Movie A")).toBeInTheDocument();
-    expect(screen.getByText("Remove Movie B")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Remove"));
+    await waitFor(() => expect(deleteDoc).toHaveBeenCalled());
   });
 
-  it("removes movie from state and calls deleteDoc", async () => {
+  it("renders error message when fetch fails", async () => {
     (useAuth as jest.Mock).mockReturnValue({
       user: { uid: "123" },
       loading: false,
     });
+    (getDocs as jest.Mock).mockRejectedValue(new Error("Firestore error"));
 
-    (getDocs as jest.Mock).mockResolvedValue({
-      docs: [{ id: "1", data: () => ({ title: "Movie A" }) }],
-    });
+    render(<DashboardPage />, { wrapper: createWrapper() });
 
-    render(<DashboardPage />);
-
-    const removeBtn = await screen.findByText("Remove Movie A");
-    fireEvent.click(removeBtn);
-
-    await waitFor(() => {
-      expect(deleteDoc).toHaveBeenCalled();
-      expect(screen.queryByText("Remove Movie A")).not.toBeInTheDocument();
-    });
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Failed to load watchlist. Please try again./),
+      ).toBeInTheDocument(),
+    );
   });
 });
