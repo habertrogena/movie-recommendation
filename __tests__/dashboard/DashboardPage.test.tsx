@@ -10,7 +10,7 @@ jest.mock("@/components/LoadingMovies", () => () => <div>LoadingMovies</div>);
 jest.mock(
   "@/components/ErrorMessage",
   () =>
-    ({ message }: { message: string }) => <div>{message}</div>
+    ({ message }: { message: string }) => <div>{message}</div>,
 );
 jest.mock(
   "@/components/dashboard/WatchlistGrid",
@@ -29,7 +29,7 @@ jest.mock(
           </div>
         ))}
       </div>
-    )
+    ),
 );
 jest.mock("@/components/dashboard/WatchlistEmpty", () => () => (
   <div>No movies</div>
@@ -82,7 +82,7 @@ describe("DashboardPage", () => {
 
     render(<DashboardPage />);
     await waitFor(() =>
-      expect(screen.getByText(/failed to load watchlist/i)).toBeInTheDocument()
+      expect(screen.getByText(/failed to load watchlist/i)).toBeInTheDocument(),
     );
   });
 
@@ -127,7 +127,7 @@ describe("DashboardPage", () => {
       docs: movies.map((m) => ({ id: m.id.toString(), data: () => m })),
     });
     (doc as jest.Mock).mockImplementation(
-      (db, path1, path2, path3, path4) => `${path1}-${path2}-${path3}-${path4}`
+      (db, path1, path2, path3, path4) => `${path1}-${path2}-${path3}-${path4}`,
     );
     (deleteDoc as jest.Mock).mockResolvedValue(null);
 
@@ -154,7 +154,7 @@ describe("DashboardPage", () => {
 
     render(<DashboardPage />);
     await waitFor(() =>
-      expect(screen.getByText("RecommendedMovies")).toBeInTheDocument()
+      expect(screen.getByText("RecommendedMovies")).toBeInTheDocument(),
     );
   });
 });
