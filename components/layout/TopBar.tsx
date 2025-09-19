@@ -32,7 +32,6 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
 
   return (
     <div className="sticky top-0 z-20 bg-slate-200 pb-4 mb-6 flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-center border-b border-gray-300">
-      {/* Search */}
       <div className="relative flex-1 w-full max-w-lg">
         <input
           type="text"
@@ -46,9 +45,7 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
         </span>
       </div>
 
-      {/* Right side */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {/* Animated Watchlist Icon */}
         <motion.div
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
@@ -63,7 +60,6 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
           <ProfileMenu user={user} />
         ) : (
           <>
-            {/* Login Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -75,7 +71,6 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
               Login
             </motion.button>
 
-            {/* Sign Up Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -90,7 +85,6 @@ export default function TopBar({ query, setQuery }: TopBarProps) {
         )}
       </div>
 
-      {/* Auth Modals */}
       <AuthModals
         isLoginOpen={isLoginOpen}
         setIsLoginOpen={setIsLoginOpen}
