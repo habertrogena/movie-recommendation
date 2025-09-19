@@ -61,7 +61,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
           <h3 className="text-sm font-semibold mb-2">Categories</h3>
           <ul className="space-y-1">
             {loading ? (
-              <li className="text-sm text-gray-400">Loading...</li>
+              <li className="text-sm text-gray-400">loading ...</li>
             ) : categories.length > 0 ? (
               categories.map((c) => (
                 <li
