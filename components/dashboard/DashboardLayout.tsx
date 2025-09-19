@@ -14,12 +14,10 @@ export default function DashboardLayout({ children }: Props) {
 
   return (
     <div className="flex min-h-screen bg-slate-100">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
+      <div className="hidden md:block fixed top-0 left-0 h-full w-64 bg-white shadow-lg">
         <Sidebar />
       </div>
 
-      {/* Mobile Sidebar with animation */}
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.div
@@ -34,9 +32,9 @@ export default function DashboardLayout({ children }: Props) {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col md:ml-64">
         <TopBar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

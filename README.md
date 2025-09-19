@@ -13,7 +13,7 @@ This project is part of the **Savannah Informatics Web Developer Assessment**. I
 - 🔍 **Search** → Find movies by title/keyword.
 - 📄 **Pagination** → Navigate through multiple pages of movies.
 - ⏳ **Loaders** → Skeletons/spinners while data loads.
-- 🔑 **Authentication** → Simple login with Firebase (Google/Email).
+- 🔑 **Authentication** → Simple login and signup with Firebase (Google/Email).
 - 🧪 **Testing** → Unit tests with Jest & React Testing Library.
 - ⚡ **CI/CD** → GitHub Actions (lint + tests) & deployment on Vercel.
 

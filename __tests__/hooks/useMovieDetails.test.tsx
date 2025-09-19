@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMovieDetails } from "@/hooks/useMovieDetails";
 import * as tmdb from "@/lib/tmdb";
 
-// Mock fetchMovieDetails
 jest.mock("@/lib/tmdb", () => ({
   fetchMovieDetails: jest.fn(),
 }));
