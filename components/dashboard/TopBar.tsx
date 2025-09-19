@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { logout } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Home } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface TopBarProps {
@@ -11,7 +10,6 @@ interface TopBarProps {
 }
 
 export default function TopBar({ onMenuClick }: TopBarProps) {
-  const [search, setSearch] = useState("");
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -25,31 +23,24 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
         {onMenuClick && (
           <button
             onClick={onMenuClick}
+            aria-label="open menu"
             className="md:hidden p-2 rounded hover:bg-slate-100"
           >
             <Menu className="w-6 h-6" />
           </button>
         )}
-        <motion.h1
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-lg sm:text-xl font-bold"
+
+        <motion.button
+          onClick={() => router.push("/")}
+          className="flex items-center gap-2 px-3 py-1.5 rounded bg-blue-500 text-white text-sm hover:bg-blue-600"
+          whileTap={{ scale: 0.95 }}
         >
-          Movie Dashboard
-        </motion.h1>
+          <Home className="w-4 h-4" />
+          Home
+        </motion.button>
       </div>
 
       <div className="flex items-center gap-3">
-        <motion.input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search movies..."
-          className="hidden sm:block px-3 py-2 border rounded w-40 md:w-64"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        />
         <motion.button
           onClick={handleLogout}
           className="bg-red-500 text-white px-3 sm:px-4 py-1.5 rounded hover:bg-red-600 text-sm"

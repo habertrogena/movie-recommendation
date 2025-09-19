@@ -1,4 +1,3 @@
-// components/WatchlistIcon.tsx
 "use client";
 
 interface WatchlistIconProps {

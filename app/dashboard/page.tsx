@@ -5,33 +5,28 @@ import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, doc, getDocs, deleteDoc } from "firebase/firestore";
 import { useAuth } from "@/hooks/useAuth";
+
 import LoadingMovies from "@/components/LoadingMovies";
 import ErrorMessage from "@/components/ErrorMessage";
 import WatchlistGrid from "@/components/dashboard/WatchlistGrid";
 import WatchlistEmpty from "@/components/dashboard/WatchlistEmpty";
-
-interface Movie {
-  id: number;
-  title: string;
-  poster_path?: string;
-}
+import RecommendedMovies from "@/components/dashboard/RecommendedMovies";
+import { WatchlistMovie } from "@/services/watchlistService";
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  const [watchlist, setWatchlist] = useState<Movie[]>([]);
+  const [watchlist, setWatchlist] = useState<WatchlistMovie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Redirect if not logged in
   useEffect(() => {
     if (!loading && !user) {
       router.push("/");
     }
   }, [user, loading, router]);
 
-  // Fetch watchlist movies
   useEffect(() => {
     const fetchWatchlist = async () => {
       if (!user) return;
@@ -42,14 +37,22 @@ export default function DashboardPage() {
         const ref = collection(db, "users", user.uid, "watchlist");
         const snapshot = await getDocs(ref);
 
-        const movies: Movie[] = snapshot.docs.map((d) => ({
-          id: parseInt(d.id, 10), // use Firestore doc ID
-          ...(d.data() as Omit<Movie, "id">),
-        }));
+        const movies: WatchlistMovie[] = snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: parseInt(d.id, 10),
+            title: data.title,
+            poster_path: data.poster_path ?? null,
+            backdrop_path: data.backdrop_path ?? null,
+            release_date: data.release_date ?? "",
+            vote_average: data.vote_average ?? 0,
+            genres: data.genres ?? [],
+          };
+        });
 
         setWatchlist(movies);
       } catch (err) {
-        setError(`Failed to load watchlist. Please try again.${err}`);
+        setError(`Failed to load watchlist. Please try again. ${err}`);
       } finally {
         setIsLoading(false);
       }
@@ -58,7 +61,6 @@ export default function DashboardPage() {
     fetchWatchlist();
   }, [user]);
 
-  // Remove movie from watchlist
   const handleRemove = async (movieId: number) => {
     if (!user) return;
 
@@ -70,7 +72,7 @@ export default function DashboardPage() {
         doc(db, "users", user.uid, "watchlist", movieId.toString()),
       );
     } catch (err) {
-      setError(`Could not remove movie. Try again.${err}`);
+      setError(`Could not remove movie. Try again. ${err}`);
     }
   };
 
@@ -78,7 +80,7 @@ export default function DashboardPage() {
   if (error) return <ErrorMessage message={error} />;
 
   return (
-    <>
+    <div className="px-4 md:px-8">
       <h3 className="text-3xl font-bold mb-6">🎬 My Watchlist</h3>
 
       {watchlist.length === 0 ? (
@@ -86,6 +88,10 @@ export default function DashboardPage() {
       ) : (
         <WatchlistGrid movies={watchlist} onRemove={handleRemove} />
       )}
-    </>
+
+      <div className="mt-12">
+        <RecommendedMovies watchlist={watchlist} />
+      </div>
+    </div>
   );
 }
